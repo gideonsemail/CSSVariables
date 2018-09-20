@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+</head>
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="10" max="200"
+     value="10" data-sizing="px">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
+
+    <label for="base">Base Color</label>
+    <input id="base" type="color" name="base" value="#ffc600">
+  </div>
+
+  <img src="https://cmeimg-a.akamaihd.net/640/clsd/getty/51112972e0a840e692f92d0036c893ab">
+
+  <style>
+  /*declare it on some sort of elemnt, but declaring on root, which is the highest element*/
+  :root {
+    --base: #ffc600;
+    --spacing: 10px;
+    --blur: 10px;
+  }
+/*add some styling to the elements with the newly creasted CSS variables, syntax is below. Now, anywhere we reference these colors will inheirt the styling*/
+/*added variables stlying to img and hl*/
+  img {
+    padding: var(--spacing);
+    background: var(--base);
+    filter: blur(var(--blur))
+  }
+
+  .hl {
+    color: var(--base);
+  }
+
+    body {
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+    }
+    .controls {
+      margin-bottom: 50px;
+    }
+    input {
+      width:100px;
+    }
+  </style>
+
+  <script>
+
+
+  //we'll use the forEach method to loop over the Node list since we can't use map methods here.
+  let inputs = document.querySelectorAll('.controls input')
+
+  function handleUpdate() {
+      //Added info to each of the inputs above. created a data attribute below called "data-sizing" above, and named it "px". This was created so can have something to reference.
+      //add the option OR NOTHING as well.(since no suffix for the hex code)
+    let suffix = this.dataset.sizing || "";
+    //console.log(suffix)
+    //console.log(this.value);
+    //console.log(this.name)
+    document.documentElement.style.setProperty(`--${this.name}`, /*set it to ->*/ this.value + /*tack on that suffix variable*/ suffix);
+  }
+//then we're going to listen for a change event for each of the inputs.
+inputs.forEach(input => input.addEventListener('change', handleUpdate))
+//listen for the mousemove updates as well
+inputs.forEach(input => input.addEventListener('mousemove', handleUpdate))
+  </script>
+
+</body>
+</html>
